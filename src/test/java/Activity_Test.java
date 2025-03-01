@@ -1,6 +1,8 @@
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.json.JSONObject;
 import org.testng.annotations.Test;
 
-public class Activity_Test {
+public class Activity_Test extends Test_Data {
 
     private REST_Manager RM = null;
     private Header_Manager HM = null;
@@ -22,14 +24,19 @@ public class Activity_Test {
         System.out.println("Response Body: " + REST_Manager._Response.asString());
     }
 
-    @Test
-    public void PostActivity() {
-        // Request body for creating an activity
-        String requestBody = "{ \"title\": \"New Activity\", \"dueDate\": \"2025-12-31T00:00:00.000Z\", \"completed\": false }";
+    @Test(dataProvider = "DataForPost")
+    public void PostActivity(String title, String dueDate, String completed) {
+
+        JSONObject request = new JSONObject();
+        request.put("title", title);
+        request.put("dueDate", dueDate);
+        request.put("completed", completed);
+
+        System.out.println("Request body " + request);
 
         REST_Manager._Response = RM._POST(env,
                 RestAPI_EP.ENDPOINTS.EP_POSTACTIVITIES.strGet_URL(),
-                requestBody,
+                request,
                 HM.getDefaultHeaders(false),
                 200);
 
